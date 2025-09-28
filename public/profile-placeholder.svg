@@ -1,0 +1,13 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gradient" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(100 100) rotate(45) scale(420)">
+      <stop stop-color="#2563eb" />
+      <stop offset="1" stop-color="#1e293b" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" rx="200" fill="#0f172a" />
+  <rect width="400" height="400" rx="200" fill="url(#gradient)" opacity="0.9" />
+  <path d="M200 100C227.614 100 250 122.386 250 150C250 177.614 227.614 200 200 200C172.386 200 150 177.614 150 150C150 122.386 172.386 100 200 100Z" fill="white" fill-opacity="0.85" />
+  <path d="M200 220C154.8 220 118 256.8 118 302C118 315.255 128.745 326 142 326H258C271.255 326 282 315.255 282 302C282 256.8 245.2 220 200 220Z" fill="white" fill-opacity="0.85" />
+  <text x="50%" y="55%" text-anchor="middle" fill="#1d4ed8" font-family="'Playfair Display', serif" font-size="120" font-weight="600">LL</text>
+</svg>
