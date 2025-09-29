@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Manrope, Fraunces } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const playfair = Playfair_Display({
+const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["400", "500", "600", "700"],
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="bg-slate-50">
+    <html lang="en" className="bg-emerald-50">
       <body
-        className={`${inter.variable} ${playfair.variable} font-body antialiased text-slate-900`}
+        className={`${manrope.variable} ${fraunces.variable} font-body antialiased text-slate-900`}
       >
         {children}
       </body>

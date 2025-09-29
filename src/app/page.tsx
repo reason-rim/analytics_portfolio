@@ -1,28 +1,64 @@
+'use client';
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Mail, Github, Linkedin } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { ArrowUpRight, Mail, Github, Linkedin, Phone } from "lucide-react";
 import { projects } from "@/data/projects";
 
-const socialLinks = [
+const CONTACT_EMAIL = "yourimfirst@gmail.com";
+const CONTACT_PHONE = "437-982-5700";
+const CONTACT_PHONE_TEL = CONTACT_PHONE.replace(/[^0-9]/g, "");
+
+const contactButtonClasses =
+  "inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+
+type SocialLink =
+  | {
+      kind: "link";
+      label: string;
+      href: string;
+      icon: LucideIcon;
+      style: string;
+    }
+  | {
+      kind: "action";
+      label: string;
+      icon: LucideIcon;
+      style: string;
+    };
+
+const socialLinks: SocialLink[] = [
   {
+    kind: "link",
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/your-profile",
+    href: "https://www.linkedin.com/in/laura-lee-analytics/",
     icon: Linkedin,
-    style: "bg-primary text-white hover:bg-primary/90",
+    style: "bg-blue-600 text-white hover:bg-blue-700",
   },
   {
+    kind: "link",
     label: "GitHub",
-    href: "https://github.com/your-username",
+    href: "https://github.com/reason-rim",
     icon: Github,
     style:
-      "border border-slate-200 text-slate-700 hover:border-primary hover:text-primary bg-white",
+      "border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 bg-white",
   },
   {
+    kind: "action",
     label: "Email",
-    href: "mailto:laura.lee@example.com",
     icon: Mail,
     style:
-      "border border-slate-200 text-slate-700 hover:border-primary hover:text-primary bg-white",
+      "border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 bg-white",
+  },
+  {
+    kind: "link",
+    label: CONTACT_PHONE,
+    href: `tel:${CONTACT_PHONE_TEL}`,
+    icon: Phone,
+    style:
+      "border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 bg-white",
   },
 ];
 
@@ -35,59 +71,87 @@ function ProjectCard({
   summary,
   thumbnail,
   metrics,
+  tools,
+  links,
 }: ProjectCardProps) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white/90 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary-soft via-white to-primary-soft/60">
-        <Image
-          src={thumbnail}
-          alt={title}
-          fill
-          className="object-cover object-center transition duration-500 group-hover:scale-105"
-          sizes="(min-width: 1024px) 420px, 100vw"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between px-5 pb-4 text-white">
-          <p className="text-sm font-medium uppercase tracking-[0.32em]">
-            {metrics[0]?.label ?? ""}
-          </p>
-          <p className="text-sm font-semibold">
-            {metrics[0]?.value ?? ""}
-          </p>
+    <article className="group flex flex-col overflow-hidden rounded-3xl border border-slate-100/80 bg-white/85 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:flex-row backdrop-panel">
+      <div className="relative w-full overflow-hidden bg-slate-100 md:w-72">
+        <div className="relative aspect-[4/3] w-full">
+          <Image
+            src={thumbnail}
+            alt={title}
+            fill
+            className="object-cover transition duration-500 group-hover:scale-105"
+            sizes="(min-width: 1024px) 18rem, 100vw"
+          />
         </div>
       </div>
 
-      <div className="mt-6 flex flex-1 flex-col gap-4">
-        <div>
-          <h3 className="font-display text-2xl font-semibold text-slate-900">
-            {title}
-          </h3>
-          <p className="mt-2 text-base leading-relaxed text-slate-600">{summary}</p>
+      <div className="flex flex-1 flex-col justify-between gap-6 p-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-blue-500">
+            <span>{metrics[0]?.label ?? "Results"}</span>
+            <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-600">
+              {metrics[0]?.value ?? ""}
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-600">
+              Tools &amp; tech
+            </span>
+            {tools.map((tool) => (
+              <span
+                key={tool}
+                className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-blue-700"
+              >
+                {tool}
+              </span>
+            ))}
+            {links[0] && (
+              <Link
+                href={links[0].href}
+                className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700 transition hover:border-emerald-300 hover:text-emerald-800"
+                target={links[0].external ? "_blank" : undefined}
+                rel={links[0].external ? "noopener noreferrer" : undefined}
+              >
+                <span className="font-semibold">Explore more</span>
+                <span className="hidden sm:inline">· {links[0].label}</span>
+                <ArrowUpRight className="size-3" />
+              </Link>
+            )}
+          </div>
+          <div className="space-y-3">
+            <h3 className="font-display text-2xl font-semibold text-slate-900">
+              {title}
+            </h3>
+            <p className="text-base leading-relaxed text-slate-600">{summary}</p>
+          </div>
+          <ul className="space-y-2 text-sm text-slate-600">
+            {teaser.map((point) => (
+              <li key={point} className="flex items-start gap-2 leading-relaxed">
+                <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <ul className="space-y-2 text-sm text-slate-600">
-          {teaser.map((point) => (
-            <li key={point} className="flex items-start gap-2 leading-relaxed">
-              <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-              <span>{point}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-auto flex items-center justify-between pt-4">
-          <div className="flex gap-3 text-sm text-slate-500">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap gap-3 text-xs font-medium text-slate-500">
             {metrics.slice(1).map((metric) => (
-              <div key={metric.label} className="rounded-full bg-primary-soft/80 px-4 py-1 text-slate-700">
-                <span className="font-medium text-sm text-slate-900">{metric.value}</span>
-                <span className="ml-1.5 text-xs uppercase tracking-wider text-slate-500">
-                  {metric.label}
-                </span>
-              </div>
+              <span
+                key={metric.label}
+                className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-600"
+              >
+                <span className="mr-1 text-slate-900">{metric.value}</span>
+                {metric.label}
+              </span>
             ))}
           </div>
           <Link
             href={`/projects/${slug}`}
-            className="inline-flex items-center gap-2 rounded-full border border-transparent bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90"
+            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             View case study
             <ArrowUpRight className="size-4" />
@@ -99,12 +163,71 @@ function ProjectCard({
 }
 
 export default function Home() {
+  const [showCopyToast, setShowCopyToast] = useState(false);
+  const [fadeCopyToast, setFadeCopyToast] = useState(false);
+  const toastTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearToastTimers = useCallback(() => {
+    toastTimersRef.current.forEach((timer) => clearTimeout(timer));
+    toastTimersRef.current = [];
+  }, []);
+
+  const handleCopyEmail = useCallback(async () => {
+    clearToastTimers();
+    let copied = false;
+
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(CONTACT_EMAIL);
+        copied = true;
+      } catch {
+        copied = false;
+      }
+    }
+
+    if (!copied && typeof document !== "undefined") {
+      const tempInput = document.createElement("input");
+      tempInput.value = CONTACT_EMAIL;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      tempInput.setSelectionRange(0, CONTACT_EMAIL.length);
+      try {
+        document.execCommand("copy");
+        copied = true;
+      } catch {
+        copied = false;
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    if (!copied) {
+      if (typeof window !== "undefined") {
+        window.location.href = `mailto:${CONTACT_EMAIL}`;
+      }
+      return;
+    }
+
+    setShowCopyToast(true);
+    setFadeCopyToast(false);
+
+    const fadeTimer = setTimeout(() => setFadeCopyToast(true), 2200);
+    const hideTimer = setTimeout(() => {
+      setShowCopyToast(false);
+      setFadeCopyToast(false);
+      toastTimersRef.current = [];
+    }, 2800);
+
+    toastTimersRef.current = [fadeTimer, hideTimer];
+  }, [clearToastTimers]);
+
+  useEffect(() => () => clearToastTimers(), [clearToastTimers]);
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-20 px-6 pb-24 pt-16 md:px-10 lg:px-16">
-      <section className="grid items-start gap-12 rounded-3xl border border-slate-100 bg-white/70 p-10 shadow-md backdrop-panel md:grid-cols-[auto,1fr]">
+    <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-12 px-6 pb-16 pt-12 md:px-10 lg:px-16">
+      <section className="flex flex-col gap-10 rounded-3xl border border-slate-100 bg-white/90 p-10 shadow-md backdrop-panel md:flex-row md:items-center">
         <div className="relative mx-auto h-40 w-40 overflow-hidden rounded-full border-4 border-white shadow-xl ring-4 ring-primary-soft ring-offset-4 ring-offset-white md:mx-0">
           <Image
-            src="/profile-placeholder.svg"
+            src="/profile.jpg"
             alt="Laura Lee headshot"
             fill
             className="object-cover"
@@ -112,7 +235,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5 md:max-w-2xl">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.5em] text-primary">
               Junior Data Analyst
@@ -121,69 +244,99 @@ export default function Home() {
               Laura Lee
             </h1>
             <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-              I turn messy data into crisp stories. I specialize in bringing dashboards to life,
-              uncovering experimentation insights, and partnering with stakeholders to move key metrics.
+              I am a recent graduate with a background in Statistics, Computing, and Teaching, aspiring to grow as a data analyst. This is just the beginning—I will keep adding more projects along the way!
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {socialLinks.map(({ label, href, icon: Icon, style }) => (
-              <Link
-                key={label}
-                href={href}
-                className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${style}`}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-              >
-                <Icon className="size-4" />
-                {label}
-              </Link>
-            ))}
+            {socialLinks.map((link) => {
+              const Icon = link.icon;
+
+              if (link.kind === "action") {
+                return (
+                  <button
+                    key={link.label}
+                    type="button"
+                    onClick={handleCopyEmail}
+                    className={`${contactButtonClasses} ${link.style}`}
+                  >
+                    <Icon className="size-4" />
+                    {link.label}
+                  </button>
+                );
+              }
+
+              const isExternal = link.href.startsWith("http");
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className={`${contactButtonClasses} ${link.style}`}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                >
+                  <Icon className="size-4" />
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
 
           <div className="flex flex-wrap gap-4 border-t border-slate-100 pt-6 text-sm text-slate-500">
             <div>
               <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Focus Areas</p>
               <p className="mt-2 font-medium text-slate-700">
-                Dashboard design · Experiment analysis · Lifecycle analytics
+                Statistical Modeling & Experiment Analysis · Data Visualization & Dashboard Design
               </p>
             </div>
             <div>
               <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Tools</p>
               <p className="mt-2 font-medium text-slate-700">
-                SQL · Python · Tableau · Power BI · dbt
+                Excel · SQL · R · Power BI · Tableau · Python
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="flex flex-col gap-8">
-        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="font-display text-3xl font-semibold text-slate-900 md:text-4xl">
-              Project Showcase
-            </h2>
-            <p className="mt-3 max-w-2xl text-base text-slate-600">
-              Explore dashboards, retention monitors, and experimentation hubs I designed to help
-              teams make decisions faster.
-            </p>
+      <section className="rounded-3xl border border-slate-100 bg-white/90 p-10 shadow-md backdrop-panel">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="font-display text-3xl font-semibold text-slate-900 md:text-4xl">
+                Project Showcase
+              </h2>
+              <p className="mt-3 max-w-2xl text-base text-slate-600">
+                Explore dashboards, retention monitors, and experimentation hubs I designed to help
+                teams make decisions faster.
+              </p>
+            </div>
+            <Link
+              href="mailto:yourimfirst@gmail.com"
+              className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-600 md:self-auto"
+            >
+              Request a walkthrough
+              <ArrowUpRight className="size-4" />
+            </Link>
           </div>
-          <Link
-            href="mailto:laura.lee@example.com"
-            className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-primary hover:text-primary md:self-auto"
-          >
-            Request a walkthrough
-            <ArrowUpRight className="size-4" />
-          </Link>
-        </div>
 
-        <div className="grid gap-8 md:grid-cols-2">
-          {projects.map((project) => (
-            <ProjectCard key={project.slug} {...project} />
-          ))}
+          <div className="grid gap-8">
+            {projects.map((project) => (
+              <ProjectCard key={project.slug} {...project} />
+            ))}
+          </div>
         </div>
       </section>
+
+      {showCopyToast && (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className={`pointer-events-auto rounded-full border border-blue-200 bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-opacity duration-500 ease-out ${fadeCopyToast ? "opacity-0" : "opacity-100"}`}
+          >
+            Email copied to clipboard: {CONTACT_EMAIL}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

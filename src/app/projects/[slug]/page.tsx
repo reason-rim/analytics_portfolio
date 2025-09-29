@@ -5,6 +5,14 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getProjectBySlug, projects } from "@/data/projects";
 
+function createSectionId(input: string) {
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
@@ -43,6 +51,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
+  const tocItems = project.sections.map((section) => ({
+    heading: section.heading,
+    id: section.anchor ?? createSectionId(section.heading),
+  }));
+
+  const showSidebar =
+    project.slug !== "mall-customer-analytics" &&
+    (project.tools.length > 0 || project.links.length > 0);
+
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-16 px-6 pb-24 pt-16 md:px-8 lg:px-0">
       <Link
@@ -79,6 +96,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </div>
 
+        {tocItems.length > 0 && (
+          <nav className="rounded-3xl border border-slate-100 bg-white/70 p-6 text-sm text-slate-600 shadow-sm backdrop-panel">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-primary">
+              Project outline
+            </p>
+            <ol className="mt-4 space-y-2">
+              {tocItems.map((item, index) => (
+                <li key={item.id} className="flex items-center gap-3">
+                  <span className="rounded-full bg-primary-soft/60 px-2 py-0.5 text-[0.65rem] font-semibold text-primary">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <a href={`#${item.id}`} className="transition hover:text-primary">
+                    {item.heading}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
         <div className="relative aspect-[16/8] w-full overflow-hidden rounded-[2.75rem] border border-slate-100 bg-slate-100">
           <Image
             src={project.heroImage}
@@ -91,63 +128,80 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </header>
 
       <section className="flex flex-col gap-12">
-        <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_240px]">
+        <div
+          className={`grid gap-8 ${
+            showSidebar ? "md:grid-cols-[minmax(0,1fr)_240px]" : ""
+          }`}
+        >
           <div className="space-y-10">
-            {project.sections.map((section) => (
-              <article key={section.heading}>
-                <h2 className="font-display text-2xl font-semibold text-slate-900">
-                  {section.heading}
-                </h2>
-                <p className="mt-4 text-base leading-relaxed text-slate-600">
-                  {section.body}
-                </p>
-                {section.bullets && (
-                  <ul className="mt-4 space-y-2 text-sm text-slate-600">
-                    {section.bullets.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </article>
-            ))}
+            {project.sections.map((section) => {
+              const sectionId = section.anchor ?? createSectionId(section.heading);
+              return (
+                <article key={section.heading} id={sectionId}>
+                  <h2 className="font-display text-2xl font-semibold text-slate-900">
+                    {section.heading}
+                  </h2>
+                  {section.body && (
+                    <p className="mt-4 text-base leading-relaxed text-slate-600">
+                      {section.body}
+                    </p>
+                  )}
+                  {section.html && (
+                    <div
+                      className="rich-text mt-4"
+                      dangerouslySetInnerHTML={{ __html: section.html }}
+                    />
+                  )}
+                  {section.bullets && (
+                    <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                      {section.bullets.map((item) => (
+                        <li key={item} className="flex items-start gap-2">
+                          <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </article>
+              );
+            })}
           </div>
 
-          <aside className="flex flex-col gap-6 rounded-3xl border border-slate-100 bg-white/60 p-6 shadow-sm backdrop-panel">
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
-                Tools & tech
-              </h3>
-              <ul className="mt-3 space-y-2 text-sm text-slate-600">
-                {project.tools.map((tool) => (
-                  <li key={tool}>{tool}</li>
-                ))}
-              </ul>
-            </div>
-            {project.links.length > 0 && (
+          {showSidebar && (
+            <aside className="flex flex-col gap-6 rounded-3xl border border-slate-100 bg-white/60 p-6 shadow-sm backdrop-panel">
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
-                  Explore more
+                  Tools & tech
                 </h3>
-                <div className="mt-3 flex flex-col gap-2">
-                  {project.links.map((link) => (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-primary hover:text-primary"
-                      target={link.external ? "_blank" : undefined}
-                      rel={link.external ? "noopener noreferrer" : undefined}
-                    >
-                      {link.label}
-                      <ArrowUpRight className="size-4" />
-                    </Link>
+                <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                  {project.tools.map((tool) => (
+                    <li key={tool}>{tool}</li>
                   ))}
-                </div>
+                </ul>
               </div>
-            )}
-          </aside>
+              {project.links.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-[0.4em] text-slate-400">
+                    Explore more
+                  </h3>
+                  <div className="mt-3 flex flex-col gap-2">
+                    {project.links.map((link) => (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-primary hover:text-primary"
+                        target={link.external ? "_blank" : undefined}
+                        rel={link.external ? "noopener noreferrer" : undefined}
+                      >
+                        {link.label}
+                        <ArrowUpRight className="size-4" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </aside>
+          )}
         </div>
       </section>
     </main>

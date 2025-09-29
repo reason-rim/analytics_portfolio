@@ -1,0 +1,24 @@
+<svg width="1400" height="900" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="900" rx="48" fill="#f7fbff" />
+  <rect x="80" y="80" width="1240" height="740" rx="40" fill="white"/>
+  <rect x="140" y="160" width="420" height="520" rx="28" fill="#e3efff"/>
+  <rect x="600" y="160" width="660" height="220" rx="28" fill="#d4e5ff"/>
+  <rect x="600" y="420" width="660" height="260" rx="28" fill="#eff6ff"/>
+  <path d="M200 420C240 360 320 300 380 320C440 340 480 420 520 480" stroke="#1e40af" stroke-width="20" stroke-linecap="round" fill="none"/>
+  <path d="M200 560C260 520 340 520 400 560C460 600 520 640 580 620" stroke="#60a5fa" stroke-width="18" stroke-linecap="round" fill="none"/>
+  <rect x="640" y="200" width="220" height="60" rx="18" fill="#1d4ed8" opacity="0.85"/>
+  <rect x="900" y="200" width="220" height="60" rx="18" fill="#38bdf8" opacity="0.8"/>
+  <rect x="600" y="460" width="260" height="60" rx="20" fill="#1e3a8a" opacity="0.8"/>
+  <rect x="900" y="460" width="260" height="60" rx="20" fill="#1d4ed8" opacity="0.8"/>
+  <rect x="600" y="560" width="260" height="40" rx="16" fill="#93c5fd"/>
+  <rect x="900" y="560" width="260" height="40" rx="16" fill="#bfdbfe"/>
+  <circle cx="270" cy="280" r="50" fill="#1d4ed8"/>
+  <circle cx="380" cy="280" r="50" fill="#60a5fa"/>
+  <rect x="640" y="520" width="520" height="120" rx="24" fill="#f8fafc"/>
+  <text x="660" y="245" fill="white" font-family="'Manrope', 'Segoe UI', sans-serif" font-size="26" font-weight="600">HSR ↑</text>
+  <text x="920" y="245" fill="white" font-family="'Manrope', 'Segoe UI', sans-serif" font-size="26" font-weight="600">LCR ↓</text>
+  <text x="660" y="505" fill="white" font-family="'Manrope', 'Segoe UI', sans-serif" font-size="22" font-weight="600">Age cohorts</text>
+  <text x="920" y="505" fill="white" font-family="'Manrope', 'Segoe UI', sans-serif" font-size="22" font-weight="600">Category mix</text>
+  <text x="660" y="600" fill="#1e3a8a" font-family="'Manrope', 'Segoe UI', sans-serif" font-size="20">Quantile thresholds</text>
+  <text x="660" y="640" fill="#1e3a8a" font-family="'Manrope', 'Segoe UI', sans-serif" font-size="18">HSR = Top 20% spend • LCR = Bottom 15% credit</text>
+</svg>

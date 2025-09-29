@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --accent: #2563eb;
-  --accent-muted: #eff6ff;
-  --accent-soft: #dbeafe;
+  --background: #f7fbff;
+  --foreground: #0a1b32;
+  --accent: #1e40af;
+  --accent-muted: #e8f3ff;
+  --accent-soft: #d4e5ff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #050816;
-    --foreground: #f8fafc;
-    --accent: #60a5fa;
-    --accent-muted: #1e293b;
-    --accent-soft: #1d4ed833;
+    --background: #08111f;
+    --foreground: #e8f1ff;
+    --accent: #3b82f6;
+    --accent-muted: #1d3c73;
+    --accent-soft: #1e40af4d;
   }
 }
 
@@ -30,9 +30,7 @@
 
 body {
   min-height: 100vh;
-  background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 55%),
-    radial-gradient(circle at bottom left, rgba(14, 165, 233, 0.08), transparent 45%),
-    var(--background);
+  background: linear-gradient(135deg, rgba(186, 230, 255, 0.42) 0%, rgba(125, 211, 252, 0.25) 40%, rgba(215, 234, 255, 0.38) 100%), var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0.01em;
@@ -48,7 +46,7 @@ a:hover {
 }
 
 ::selection {
-  background-color: rgba(37, 99, 235, 0.2);
+  background-color: rgba(59, 130, 246, 0.25);
   color: var(--foreground);
 }
 
@@ -58,17 +56,74 @@ a:hover {
   }
 
   .font-display {
-    font-family: var(--font-display), "Playfair Display", serif;
+    font-family: var(--font-display), serif;
   }
 
   .backdrop-panel {
     backdrop-filter: saturate(140%) blur(18px);
-    background-color: color-mix(in srgb, rgba(255, 255, 255, 0.78) 80%, transparent);
+    background-color: color-mix(in srgb, rgba(255, 255, 255, 0.82) 85%, transparent);
   }
 }
 
 @layer components {
   .card-shadow {
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 24px 48px rgba(8, 44, 36, 0.08);
   }
+}
+
+.rich-text {
+  display: grid;
+  gap: 1rem;
+  color: var(--foreground);
+}
+
+.rich-text h3,
+.rich-text h4 {
+  font-family: var(--font-display), serif;
+  color: var(--foreground);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  margin-bottom: 0.25rem;
+}
+
+.rich-text ul {
+  margin-left: 1.25rem;
+  list-style: disc;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.rich-text li {
+  color: rgba(15, 35, 64, 0.82);
+}
+
+.rich-text pre {
+  background: rgba(30, 64, 175, 0.08);
+  border-radius: 0.875rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  border: 1px solid rgba(30, 64, 175, 0.12);
+}
+
+.rich-text code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  color: #1e40af;
+}
+
+.rich-text a {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.rich-text .toggle {
+  color: #1d4ed8;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rich-text .toggle:hover,
+.rich-text .toggle:focus {
+  color: #1e3a8a;
+  text-decoration: underline;
 }
