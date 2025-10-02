@@ -76,16 +76,14 @@ function ProjectCard({
 }: ProjectCardProps) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-3xl border border-slate-100/80 bg-white/85 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:flex-row backdrop-panel">
-      <div className="relative w-full overflow-hidden bg-slate-100 md:w-72">
-        <div className="relative aspect-[4/3] w-full">
-          <Image
-            src={thumbnail}
-            alt={title}
-            fill
-            className="object-cover transition duration-500 group-hover:scale-105"
-            sizes="(min-width: 1024px) 18rem, 100vw"
-          />
-        </div>
+      <div className="relative aspect-[2075/1200] w-full overflow-hidden bg-slate-100 md:w-72">
+        <Image
+          src={thumbnail}
+          alt={title}
+          fill
+          className="object-contain transition duration-500 group-hover:scale-105"
+          sizes="(min-width: 1024px) 18rem, 100vw"
+        />
       </div>
 
       <div className="flex flex-1 flex-col justify-between gap-6 p-6">
@@ -307,8 +305,8 @@ export default function Home() {
                 Project Showcase
               </h2>
               <p className="mt-3 max-w-2xl text-base text-slate-600">
-                Explore dashboards, retention monitors, and experimentation hubs I designed to help
-                teams make decisions faster.
+                Explore the dashboards, retention monitors, and experimentation hubs I crafted to
+                sharpen my own decision-making and analytical skills.
               </p>
             </div>
             <Link

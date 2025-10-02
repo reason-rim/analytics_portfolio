@@ -116,15 +116,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </nav>
         )}
 
-        <div className="relative aspect-[16/8] w-full overflow-hidden rounded-[2.75rem] border border-slate-100 bg-slate-100">
+        <div className="relative aspect-[2075/1200] w-full overflow-hidden border border-slate-100 bg-slate-100">
           <Image
             src={project.heroImage}
             alt={`${project.title} dashboard preview`}
             fill
-            className="object-cover"
+            className="object-contain"
             priority
           />
         </div>
+        {project.heroCaption && (
+          <p className="mt-2 text-xs text-slate-500">{project.heroCaption}</p>
+        )}
+        {project.heroNote && (
+          <p className="mt-2 text-xs text-slate-500" dangerouslySetInnerHTML={{ __html: project.heroNote }} />
+        )}
       </header>
 
       <section className="flex flex-col gap-12">
