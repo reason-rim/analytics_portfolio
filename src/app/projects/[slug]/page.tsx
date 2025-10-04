@@ -51,17 +51,43 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
-  const tocItems = project.sections.map((section) => ({
-    heading: section.heading,
-    id: section.anchor ?? createSectionId(section.heading),
-  }));
+  const extractSubHeadings = (html: string): { heading: string; id: string }[] => {
+    const matches = html.matchAll(/<h4([^>]*)>([\s\S]*?)<\/h4>/gi);
+    const subs: { heading: string; id: string }[] = [];
+    for (const match of matches) {
+      const attrString = match[1] ?? "";
+      const headingText = (match[2] ?? "").replace(/<[^>]+>/g, "").trim();
+      if (!headingText) continue;
+      const idMatch = attrString.match(/id="([^"]+)"/i);
+      const subId = idMatch ? idMatch[1] : createSectionId(headingText);
+      subs.push({ heading: headingText, id: subId });
+    }
+    return subs;
+  };
+
+  const shouldHaveSubsections = [
+    "5. Exploratory Data Analysis (EDA)",
+    "6. Statistical Deep Dives",
+  ];
+
+  const tocSections = project.sections.map((section, index) => {
+    const sectionId = section.anchor ?? createSectionId(section.heading);
+    const sectionHasSubs = shouldHaveSubsections.includes(section.heading);
+    const subHeadings = sectionHasSubs && section.html ? extractSubHeadings(section.html) : [];
+    return {
+      heading: section.heading,
+      id: sectionId,
+      displayIndex: index + 1,
+      subHeadings,
+    };
+  });
 
   const showSidebar =
     project.slug !== "mall-customer-analytics" &&
     (project.tools.length > 0 || project.links.length > 0);
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-16 px-6 pb-24 pt-16 md:px-8 lg:px-0">
+    <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-12 px-6 pb-24 pt-12 md:px-8 lg:px-0">
       <Link
         href="/"
         className="inline-flex w-fit items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-primary"
@@ -70,18 +96,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </Link>
 
       <header className="flex flex-col gap-8">
-        <div className="rounded-3xl border border-slate-100 bg-white/60 p-8 shadow-md backdrop-panel">
-          <p className="text-xs font-semibold uppercase tracking-[0.5em] text-primary">
+        <div className="rounded-3xl border border-slate-100 bg-white/60 p-7 shadow-md backdrop-panel">
+          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.45em] text-primary">
             {project.tagline}
           </p>
-          <h1 className="mt-4 font-display text-4xl font-semibold text-slate-900 md:text-5xl">
+          <h1 className="mt-3 font-display text-[2.35rem] font-semibold text-slate-900 md:text-5xl">
             {project.title}
           </h1>
-          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
+          <p className="mt-2.5 max-w-3xl text-[1.05rem] leading-relaxed text-slate-600">
             {project.summary}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-600">
+          <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
             {project.metrics.map((metric) => (
               <div
                 key={metric.label}
@@ -96,20 +122,51 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </div>
 
-        {tocItems.length > 0 && (
+        {tocSections.length > 0 && (
           <nav className="rounded-3xl border border-slate-100 bg-white/70 p-6 text-sm text-slate-600 shadow-sm backdrop-panel">
             <p className="text-xs font-semibold uppercase tracking-[0.4em] text-primary">
               Project outline
             </p>
             <ol className="mt-4 space-y-2">
-              {tocItems.map((item, index) => (
-                <li key={item.id} className="flex items-center gap-3">
-                  <span className="rounded-full bg-primary-soft/60 px-2 py-0.5 text-[0.65rem] font-semibold text-primary">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <a href={`#${item.id}`} className="transition hover:text-primary">
-                    {item.heading}
-                  </a>
+              {tocSections.map((section) => (
+                <li key={section.id} className="project-toc-item">
+                  {section.subHeadings.length > 0 ? (
+                    <details>
+                      <summary className="flex cursor-pointer list-none items-center gap-3">
+                        <span className="rounded-full bg-primary-soft/60 px-2 py-0.5 text-[0.65rem] font-semibold text-primary">
+                          {String(section.displayIndex).padStart(2, "0")}
+                        </span>
+                        <span className="flex-1 transition hover:text-primary">
+                          {section.heading}
+                        </span>
+                      </summary>
+                      <ul className="toc-sublist mt-2 space-y-1 text-xs text-slate-500">
+                        <li className="flex items-center gap-2 pl-7">
+                          <span className="mt-[2px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                          <a href={`#${section.id}`} className="transition hover:text-primary">
+                            {section.heading}
+                          </a>
+                        </li>
+                        {section.subHeadings.map((sub) => (
+                          <li key={sub.id} className="flex items-center gap-2 pl-7">
+                            <span className="mt-[2px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                            <a href={`#${sub.id}`} className="transition hover:text-primary">
+                              {sub.heading}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      <span className="rounded-full bg-primary-soft/60 px-2 py-0.5 text-[0.65rem] font-semibold text-primary">
+                        {String(section.displayIndex).padStart(2, "0")}
+                      </span>
+                      <a href={`#${section.id}`} className="transition hover:text-primary">
+                        {section.heading}
+                      </a>
+                    </div>
+                  )}
                 </li>
               ))}
             </ol>

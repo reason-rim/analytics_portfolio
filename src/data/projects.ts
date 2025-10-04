@@ -41,19 +41,15 @@ export const projects: Project[] = [
     summary:
       "Analyzed an enhanced mall-customer dataset to boost profits: cleaned and segmented in R, ran diagnostics (histograms, boxplots) and hypothesis tests (Chi-square, ANOVA, Pearson), and summarized insights in a Power BI dashboard.",
     teaser: [
-      "Quantified high-spender and low-credit cohorts using adaptive quantile thresholds",
-      "Built reproducible R workflow with tidyverse for KPI tracking and visual storytelling",
-      "Surfaced segment playbooks that balance revenue lift with credit risk guardrails",
+      "Goal: Increase the high-spender segment while maintaining or reducing the low-credit segment.",
+      "Findings: Ages 18–35 show the highest spending and variability; higher income correlates with higher credit.",
+      "Actions: Prioritize 18–35 with targeted promotions, strengthen 36–50 loyalty, monitor the low-credit segment, deprioritize gender targeting.",
     ],
     thumbnail: "/projects/mall-customer-dashboard.png",
     heroImage: "/projects/mall-customer-dashboard.png",
     heroNote:
       'Dashboard created by me in Power BI; dataset sourced from Kaggle and available directly on <a href="https://www.kaggle.com/datasets/vikasjigupta786/customer-analytics-practice-dataset" target="_blank" rel="noopener noreferrer"><strong>this Kaggle dataset</strong></a>.',
-    metrics: [
-      { label: "HSR uplift target", value: "+8 pts" },
-      { label: "Dataset size", value: "200 customers" },
-      { label: "Risk guardrail", value: "≤+0 pts LCR" },
-    ],
+    metrics: [],
     tools: ["R", "Power BI"],
     links: [
       {
@@ -138,7 +134,7 @@ CREDIT_LOW  &lt;- quantile(customers_data$credit_score,          LOW_Q,  na.rm =
       {
         heading: "5. Exploratory Data Analysis (EDA)",
         html: `
-<h4>5.1 Spending Score Distribution</h4>
+<h4 id="section-5-1">5.1 Spending Score Distribution</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-spending-score-histogram.png"
@@ -157,7 +153,7 @@ CREDIT_LOW  &lt;- quantile(customers_data$credit_score,          LOW_Q,  na.rm =
        x = "Spending Score (1-100)", y = "Count",
        fill = "Spender Group")</code></pre>
 </details>
-<h4>5.2 Credit Score Distribution</h4>
+<h4 id="section-5-2">5.2 Credit Score Distribution</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-eda-5-2.png"
@@ -176,7 +172,7 @@ CREDIT_LOW  &lt;- quantile(customers_data$credit_score,          LOW_Q,  na.rm =
        x = "Credit Score", y = "Count",
        fill = "Credit Group")</code></pre>
 </details>
-<h4>5.3 Age Group vs Spending Score</h4>
+<h4 id="section-5-3">5.3 Age Group vs Spending Score</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-eda-5-3.png"
@@ -193,7 +189,7 @@ CREDIT_LOW  &lt;- quantile(customers_data$credit_score,          LOW_Q,  na.rm =
   scale_fill_brewer(palette = "Set3") +
   labs(title = "Spending by Age Group", x = "Age Group", y = "Spending Score")</code></pre>
 </details>
-<h4>5.4 Category Preference by Gender</h4>
+<h4 id="section-5-4">5.4 Category Preference by Gender</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-eda-5-4.png"
@@ -239,7 +235,7 @@ CREDIT_LOW  &lt;- quantile(customers_data$credit_score,          LOW_Q,  na.rm =
       {
         heading: "6. Statistical Deep Dives",
         html: `
-<h4>6.1 Gender vs Preferred Category (Chi-square)</h4>
+<h4 id="section-6-1">6.1 Gender vs Preferred Category (Chi-square)</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-chi-square-results.png"
@@ -259,7 +255,7 @@ CREDIT_LOW  &lt;- quantile(customers_data$credit_score,          LOW_Q,  na.rm =
                 Category = customers_data$preferred_category)
 chisq.test(tab_gc)</code></pre>
 </details>
-<h4>6.2 Spending Score by Age Group (One-way ANOVA)</h4>
+<h4 id="section-6-2">6.2 Spending Score by Age Group (One-way ANOVA)</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-anova-results.png"
@@ -279,7 +275,7 @@ chisq.test(tab_gc)</code></pre>
   <pre><code class="language-r">fit_anova <- lm(spending_score_1_100 ~ age_group, data = customers_data)
 summary(fit_anova)</code></pre>
 </details>
-<h4>6.3 Annual Income vs Credit Score — Pearson Correlation (p-value only)</h4>
+<h4 id="section-6-3">6.3 Annual Income vs Credit Score — Pearson Correlation (p-value only)</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-pearson-correlation.png"
@@ -326,6 +322,12 @@ tibble::tibble(
   )
 </code></pre>
 </details>
+`,
+      },
+      {
+        heading: "7. Conclusion",
+        html: `
+<p class="text-slate-600">The data tells a clear story: younger customers spend more—and with greater variability—while credit quality is concentrated at the high end. Higher income is associated with higher credit scores. Based on these findings, the strategy is to expand high-spending customers (especially ages 18–35) while maintaining or reducing low-credit customers through targeted promotions for 18–35, loyalty reinforcement for ages 36–50, and continuous low-credit monitoring. Finally, given the non-significant chi-square for gender vs. preferred category, gender-based targeting is deprioritized. Focusing on spending and income signals is a more effective path to grow spend.</p>
 `,
       },
     ],

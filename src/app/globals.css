@@ -116,6 +116,11 @@ a:hover {
   font-weight: 600;
 }
 
+/* TOC accordion */
+.project-toc-item .toc-sublist {
+  display: none;
+}
+
 .rich-text .toggle {
   color: #1d4ed8;
   font-weight: 600;
@@ -126,4 +131,29 @@ a:hover {
 .rich-text .toggle:focus {
   color: #1e3a8a;
   text-decoration: underline;
+}
+.project-toc-item summary {
+  list-style: none;
+  align-items: center;
+}
+
+.project-toc-item summary::-webkit-details-marker,
+.project-toc-item summary::marker {
+  display: none;
+}
+
+.project-toc-item summary::after {
+  content: "▾";
+  font-size: 0.75rem;
+  color: #1e40af;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.project-toc-item details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.project-toc-item summary a {
+  flex: 1;
 }

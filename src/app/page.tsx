@@ -35,15 +35,7 @@ const socialLinks: SocialLink[] = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/laura-lee-analytics/",
     icon: Linkedin,
-    style: "bg-blue-600 text-white hover:bg-blue-700",
-  },
-  {
-    kind: "link",
-    label: "GitHub",
-    href: "https://github.com/reason-rim",
-    icon: Github,
-    style:
-      "border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 bg-white",
+    style: "bg-sky-300 text-white hover:bg-sky-400",
   },
   {
     kind: "action",
@@ -67,19 +59,22 @@ type ProjectCardProps = (typeof projects)[number];
 function ProjectCard({
   slug,
   title,
-  teaser,
+  teaser = [],
   summary,
-  thumbnail,
-  metrics,
-  tools,
-  links,
+  thumbnail = "/profile-placeholder.svg",
+  metrics = [],
+  tools = [],
+  links = [],
 }: ProjectCardProps) {
+  const hasPrimaryMetric = metrics.length > 0;
+  const primaryMetric = metrics[0];
+  const imageAlt = title || slug || "Project thumbnail";
   return (
     <article className="group flex flex-col overflow-hidden rounded-3xl border border-slate-100/80 bg-white/85 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:flex-row backdrop-panel">
       <div className="relative aspect-[2075/1200] w-full overflow-hidden bg-slate-100 md:w-72">
         <Image
           src={thumbnail}
-          alt={title}
+          alt={imageAlt}
           fill
           className="object-contain transition duration-500 group-hover:scale-105"
           sizes="(min-width: 1024px) 18rem, 100vw"
@@ -88,12 +83,14 @@ function ProjectCard({
 
       <div className="flex flex-1 flex-col justify-between gap-6 p-6">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-blue-500">
-            <span>{metrics[0]?.label ?? "Results"}</span>
-            <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-600">
-              {metrics[0]?.value ?? ""}
-            </span>
-          </div>
+          {hasPrimaryMetric && primaryMetric && (
+            <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-blue-500">
+              <span>{primaryMetric.label}</span>
+              <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-600">
+                {primaryMetric.value}
+              </span>
+            </div>
+          )}
           <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
             <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-600">
               Tools &amp; tech
@@ -126,12 +123,23 @@ function ProjectCard({
             <p className="text-base leading-relaxed text-slate-600">{summary}</p>
           </div>
           <ul className="space-y-2 text-sm text-slate-600">
-            {teaser.map((point) => (
-              <li key={point} className="flex items-start gap-2 leading-relaxed">
-                <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
-                <span>{point}</span>
-              </li>
-            ))}
+            {teaser.map((point) => {
+              const match = point.match(/^(Goal|Findings|Actions):\s*(.*)$/);
+              return (
+                <li key={point} className="flex items-start gap-2 leading-relaxed">
+                  <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
+                  <span>
+                    {match ? (
+                      <>
+                        <strong>{match[1]}:</strong> {match[2]}
+                      </>
+                    ) : (
+                      point
+                    )}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -149,7 +157,7 @@ function ProjectCard({
           </div>
           <Link
             href={`/projects/${slug}`}
-            className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+            className="inline-flex items-center gap-2 rounded-full bg-sky-300 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-400"
           >
             View case study
             <ArrowUpRight className="size-4" />
@@ -305,23 +313,13 @@ export default function Home() {
                 Project Showcase
               </h2>
               <p className="mt-3 max-w-2xl text-base text-slate-600">
-                Explore the dashboards, retention monitors, and experimentation hubs I crafted to
-                sharpen my own decision-making and analytical skills.
+                Explore the dashboards, retention monitors, and experimentation hubs I crafted&nbsp;to sharpen my own decision-making and analytical skills.
               </p>
             </div>
-            <Link
-              href="mailto:yourimfirst@gmail.com"
-              className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-600 md:self-auto"
-            >
-              Request a walkthrough
-              <ArrowUpRight className="size-4" />
-            </Link>
           </div>
 
           <div className="grid gap-8">
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} {...project} />
-            ))}
+            <ProjectCard {...projects[0]} />
           </div>
         </div>
       </section>
