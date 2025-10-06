@@ -54,22 +54,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   const tocSections = project.sections.map((section, index) => {
     const sectionId = section.anchor ?? createSectionId(section.heading);
+    const html = section.html ?? "";
     const hasSubsections =
-      (section.heading.startsWith("5.") || section.heading.startsWith("6.")) &&
-      section.html;
-    const subHeadings =
-      hasSubsections
-        ? Array.from(section.html.matchAll(/<h4([^>]*)>([\s\S]*?)<\/h4>/gi)).map((match) => {
-            const attrString = match[1] ?? "";
-            const headingText = (match[2] ?? "").replace(/<[^>]+>/g, "").trim();
-            const idMatch = attrString.match(/id="([^"]+)"/i);
-            const subId = idMatch ? idMatch[1] : createSectionId(headingText);
-            return {
-              heading: headingText,
-              id: subId,
-            };
-          })
-        : [];
+      (section.heading.startsWith("5.") || section.heading.startsWith("6.")) && html.length > 0;
+    const subHeadings = hasSubsections
+      ? Array.from(html.matchAll(/<h4([^>]*)>([\s\S]*?)<\/h4>/gi)).map((match) => {
+          const attrString = match[1] ?? "";
+          const headingText = (match[2] ?? "").replace(/<[^>]+>/g, "").trim();
+          const idMatch = attrString.match(/id="([^"]+)"/i);
+          const subId = idMatch ? idMatch[1] : createSectionId(headingText);
+          return {
+            heading: headingText,
+            id: subId,
+          };
+        })
+      : [];
 
     return {
       heading: section.heading,
