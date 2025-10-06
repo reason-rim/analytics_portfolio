@@ -52,15 +52,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
-  const shouldHaveSubsections = [
-    "5. Exploratory Data Analysis (EDA)",
-    "6. Statistical Deep Dives",
-  ];
-
   const tocSections = project.sections.map((section, index) => {
     const sectionId = section.anchor ?? createSectionId(section.heading);
+    const hasSubsections =
+      (section.heading.startsWith("5.") || section.heading.startsWith("6.")) &&
+      section.html;
     const subHeadings =
-      shouldHaveSubsections.includes(section.heading) && section.html
+      hasSubsections
         ? Array.from(section.html.matchAll(/<h4([^>]*)>([\s\S]*?)<\/h4>/gi)).map((match) => {
             const attrString = match[1] ?? "";
             const headingText = (match[2] ?? "").replace(/<[^>]+>/g, "").trim();

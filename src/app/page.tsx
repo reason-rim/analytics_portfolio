@@ -127,7 +127,7 @@ function ProjectCard({
               const match = point.match(/^(Goal|Findings|Actions):\s*(.*)$/);
               return (
                 <li key={point} className="flex items-start gap-2 leading-relaxed">
-                  <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
+                  <span className="mt-[10px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-blue-500" />
                   <span>
                     {match ? (
                       <>
@@ -288,7 +288,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className="flex flex-wrap gap-4 border-t border-slate-100 pt-6 text-sm text-slate-500">
+          <div className="flex flex-wrap gap-3 border-t border-slate-100 pt-5 text-sm text-slate-500">
             <div>
               <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Focus Areas</p>
               <p className="mt-2 font-medium text-slate-700">

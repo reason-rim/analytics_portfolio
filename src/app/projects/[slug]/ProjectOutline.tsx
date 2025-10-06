@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface TocSubHeading {
   heading: string;
@@ -19,7 +19,18 @@ interface ProjectOutlineProps {
 }
 
 export default function ProjectOutline({ sections }: ProjectOutlineProps) {
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const initialOpenState = useMemo(() => {
+    const defaults: Record<string, boolean> = {};
+    sections.forEach((section) => {
+      if (section.subHeadings.length > 0 &&
+        (section.heading.startsWith("5.") || section.heading.startsWith("6."))) {
+        defaults[`toc-${section.id}`] = false;
+      }
+    });
+    return defaults;
+  }, [sections]);
+
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(initialOpenState);
 
   const toggleSection = (id: string) => {
     setOpenSections((prev) => ({
@@ -45,9 +56,9 @@ export default function ProjectOutline({ sections }: ProjectOutlineProps) {
             <li key={section.id} className="project-toc-item">
               {hasSubSections ? (
                 <div>
-                 <button
+                  <button
                     type="button"
-                    className="flex w-full items-center gap-3 text-left"
+                    className="flex w-full items-center gap-3 text-left cursor-pointer"
                     onClick={() => toggleSection(key)}
                   >
                     <span className="rounded-full bg-primary-soft/60 px-2 py-0.5 text-[0.65rem] font-semibold text-primary">
@@ -66,8 +77,18 @@ export default function ProjectOutline({ sections }: ProjectOutlineProps) {
                   {isOpen && (
                     <ul className="toc-sublist mt-2 space-y-1 text-xs text-slate-500">
                       {section.subHeadings.map((sub) => (
-                        <li key={sub.id} className="pl-7">
-                          <a href={`#${sub.id}`} className="transition hover:text-primary hover:underline">
+                        <li key={sub.id} className="pl-16">
+                          <a
+                            href={`#${sub.id}`}
+                            className="transition hover:text-primary hover:underline"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              const target = document.getElementById(sub.id);
+                              if (target) {
+                                target.scrollIntoView({ behavior: "smooth", block: "start" });
+                              }
+                            }}
+                          >
                             {sub.heading}
                           </a>
                         </li>

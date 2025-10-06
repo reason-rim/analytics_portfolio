@@ -39,7 +39,7 @@ export const projects: Project[] = [
     title: "Mall Customer Analytics Project",
     tagline: "Growing high-value mall shoppers while safeguarding credit risk",
     summary:
-      "Analyzed an enhanced mall-customer dataset to boost profits: cleaned and segmented in R, ran diagnostics (histograms, boxplots) and hypothesis tests (Chi-square, ANOVA, Pearson), and summarized insights in a Power BI dashboard.",
+      "Analyzed an enhanced mall-customer dataset to boost profits: cleaned and segmented the data, ran diagnostics (histograms, boxplots) and hypothesis tests (Chi-square, ANOVA, Pearson) in R, and summarized insights in a Power BI dashboard.",
     teaser: [
       "Goal: Increase the high-spender segment while maintaining or reducing the low-credit segment.",
       "Findings: Ages 18–35 show the highest spending and variability; higher income correlates with higher credit.",
@@ -174,7 +174,7 @@ This underpins our KPI target of keeping LCR stable or lower.</p>
        x = "Credit Score", y = "Count",
        fill = "Credit Group")</code></pre>
 </details>
-<h4 id="section-5-3">5.3 Age Group vs Spending Score</h4>
+<h4 id="section-5-3">5.3 Spending Score by Age Group</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-eda-5-3.png"
@@ -235,9 +235,9 @@ This underpins our KPI target of keeping LCR stable or lower.</p>
 `,
       },
       {
-        heading: "6. Statistical Deep Dives",
+        heading: "6. Statistical Tests & Validation",
         html: `
-<h4 id="section-6-1">6.1 Gender vs Preferred Category (Chi-square)</h4>
+<h4 id="section-6-1">6.1 Gender × Preferred Category (χ² Test)</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-chi-square-results.png"
@@ -257,7 +257,7 @@ This underpins our KPI target of keeping LCR stable or lower.</p>
                 Category = customers_data$preferred_category)
 chisq.test(tab_gc)</code></pre>
 </details>
-<h4 id="section-6-2">6.2 Spending Score by Age Group (One-way ANOVA)</h4>
+<h4 id="section-6-2">6.2 Spending Score by Age Group (One-Way ANOVA)</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-anova-results.png"
@@ -277,7 +277,7 @@ chisq.test(tab_gc)</code></pre>
   <pre><code class="language-r">fit_anova <- lm(spending_score_1_100 ~ age_group, data = customers_data)
 summary(fit_anova)</code></pre>
 </details>
-<h4 id="section-6-3">6.3 Annual Income vs Credit Score — Pearson Correlation (p-value only)</h4>
+<h4 id="section-6-3">6.3 Annual Income vs Credit Score (Pearson Correlation)</h4>
 <figure style="text-align: center;">
   <img
     src="/projects/mall-pearson-correlation.png"
@@ -329,9 +329,17 @@ tibble::tibble(
       {
         heading: "7. Conclusion",
         html: `
-<p class="text-slate-600">The data tells a clear story: younger customers spend more with greater variability while credit quality is concentrated at the high end. Higher income is associated with higher credit scores. Based on these findings, the strategy is to expand high-spending customers (especially ages 18–35) 
-while maintaining or reducing low-credit customers through targeted promotions for 18–35, loyalty reinforcement for ages 36–50,
-and continuous low-credit monitoring. Finally, given the non-significant chi-square result for gender vs preferred category, gender-based targeting should be deprioritized. Focusing on spending and income signals is a more effective path to grow spending while maintaining our risk guardrail!</p>
+<p class="text-slate-600">The data tells a clear story: younger customers spend more—and with greater variability—while credit quality is concentrated at the high end. Higher income is associated with higher credit scores. Based on these findings, the strategy is to expand high-spending customers (especially ages 18–35) while maintaining or reducing low-credit customers through targeted promotions for 18–35, loyalty reinforcement for ages 36–50, and continuous low-credit monitoring. Finally, given the non-significant chi-square for gender vs. preferred category, gender-based targeting is deprioritized. Focusing on spending and income signals is a more effective path to grow spend.</p>
+`,
+      },
+      {
+        heading: "8. Self-Reflection",
+        html: `
+<p class="text-slate-600">I’ve worked with different kinds of datasets like game user data and QA test cases, but this was my first time digging into mall customer data. Turning it into profit-focused insights and a dashboard was genuinely fun and rewarding. Defining my own KPIs (HSR for growth and LCR for risk) and using them was especially fulfilling and helped sharpen the analysis. The only limitation was the lack of timestamps, so I couldn’t run time series forecasting. For my next project, I will look for a dataset with timestamps so I can practice MA/AR/ARMA modeling and conduct a proper forecast evaluation.</p>
+
+<div style="margin-top: 4rem; margin-bottom: 0;">
+  <p class="text-center text-sm text-slate-400">Thank you for reading!</p>
+</div>
 `,
       },
     ],
