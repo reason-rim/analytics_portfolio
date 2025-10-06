@@ -80,7 +80,7 @@ To track this we define two KPIs:</p>
   <li><code>customer_id</code> &mdash; unique identifier for each customer</li>
   <li><code>gender</code> &mdash; male / female</li>
   <li><code>age</code> &mdash; customer age in years</li>
-  <li><code>annual_income_k</code> &mdash; annual income in <em>thousand dollars</em></li>
+  <li><code>annual_income_k</code> &mdash; annual income in thousand dollars (k$)</li>
   <li><code>spending_score_1_100</code> &mdash; mall-assigned spending behaviour score (1&ndash;100), not raw revenue</li>
   <li><code>age_group</code> &mdash; binned age category (e.g., 18&ndash;25, 26&ndash;35, &hellip;)</li>
   <li><code>estimated_savings_k</code> &mdash; approximate savings in <em>thousand dollars</em> (derived from income and spending)</li>
@@ -99,8 +99,8 @@ To track this we define two KPIs:</p>
         heading: "3. Data Preparation (Cleaning)",
         html: `
 <ul>
-  <li>Some customers with aged 18 were missing <code>age_group</code>. Reassigned them into the <code>18&ndash;25</code> group so that every customer is accurately categorized.</li>
-  <li>In the 65+ age group, one customer with ID 11 displayed a very low spending score, 14. Preserved the record as other attributes appeared consistent and plausible, considered as a genuine behaviour rather than a data error.</li>
+  <li>Some customers with aged 18 were missing an <code>age_group</code> value. Reassigned them into the <code>18&ndash;25</code> group so that every customer is accurately categorized.</li>
+  <li>In the 65+ age group, one customer with ID 11 displayed a very low spending score, 14. Preserved the record as other attributes appeared consistent and plausible, considered genuine behaviour rather than a data error.</li>
 </ul>
 `,
       },
@@ -183,7 +183,7 @@ This underpins our KPI target of keeping LCR stable or lower.</p>
   />
 </figure>
 <p>The boxplot highlights clear spending differences across age groups. Younger customers aged <strong>18&ndash;35</strong> show the highest average spending and wide variation, identifying them as a key growth group. In contrast, middle-aged cohorts (36&ndash;65) sit notably lower than other groups.</p>
-<p><strong>So what?</strong> The mall can either strengthen profitability by offering targeted incentives to younger customers (18&ndash;35) or design targeted strategies for middle-aged groups (36&ndash;65) to increase their engagement closer to the current younger group. Either way, age-targeted execution is a direct method to increase HSR, and the statistical depth in <a href="#section-6-1">Section&nbsp;6.1</a> helps confirm which segments truly differ.</p>
+<p><strong>So what?</strong> The mall can either strengthen profitability by offering targeted incentives to younger customers (18&ndash;35) or design targeted strategies for middle-aged groups (36&ndash;65) to increase their engagement closer to the current younger group. Either way, age-targeted execution is a direct method to increase HSR, and the statistical depth in <a href="#section-6-2">Section&nbsp;6.2</a> helps confirm which segments truly differ.</p>
 <details>
   <summary class="toggle">Show R code</summary>
   <pre><code class="language-r">ggplot(customers_data, aes(age_group, spending_score_1_100, fill = age_group)) +
@@ -200,7 +200,7 @@ This underpins our KPI target of keeping LCR stable or lower.</p>
   />
 </figure>
 <p>Females consistently show higher shares across all categories (Budget, Electronics, Fashion, Luxury). The gender gap is most pronounced in Budget and Luxury, where women represent close to 60% versus about 40% for men. In Electronics and Fashion, the gap is narrower but still leans female.</p>
-<p><strong>So what?</strong> These patterns suggest that marketing campaigns should emphasize female-oriented targeting in Budget and Luxury, where women dominate, while Electronics and Fashion present more balanced opportunities to engage men effectively. Furthermore, cross-selling may be effective by encouraging female Luxury shoppers to explore Electronics or Fashion, while male customers in Electronics and Fashion are guided toward Luxury products. However, this is not definitive, as the Mall Customer dashboard shows a 44% male and 56% female split. We will verify in <a href="#section-6-1">Section&nbsp;6.1</a> via a chi-square test whether the apparent gender gaps persist beyond this sample (base-rate) imbalance.</p>
+<p><strong>So what?</strong> These patterns suggest that marketing campaigns should emphasize female-oriented targeting in Budget and Luxury, where women dominate, while Electronics and Fashion present more balanced opportunities to engage men effectively. Furthermore, cross-selling may be effective by encouraging female Luxury shoppers to explore Electronics or Fashion, while male customers in Electronics and Fashion are guided toward Luxury products. However, this is not definitive, as the Mall Customer dashboard shows a 44% male & 56% female split. We will verify in <a href="#section-6-1">Section&nbsp;6.1</a> via a chi-square test whether the apparent gender gaps persist beyond this sample (base-rate) imbalance.</p>
 <details>
   <summary class="toggle">Show R code</summary>
   <pre><code class="language-r">customers_data |>
@@ -224,7 +224,7 @@ This underpins our KPI target of keeping LCR stable or lower.</p>
   />
 </figure>
 <p>There is a clear positive relationship between annual income and credit score. Customers with higher incomes usually have higher credit scores, showing stronger creditworthiness. The regression line (blue) also confirms this upward trend as the black data points align closely with the regression line. At lower income levels (&le;40k), credit scores spread out more widely, with some very low and some mid-range scores. At higher income levels (&ge;60k), most customers cluster near the top range, with fewer low-credit cases.</p>
-<p><strong>So what?</strong> Income is a useful signal for credit risk segmentation. High-income customers are generally safer and more creditworthy, making them strong targets for marketing or lending. Because low-income customers show greater variability, we shouldn’t rely on income alone. By focusing on higher-income and creditworthy customers, it is possible to keep low-credit share steady or reduce it while increasing HSR.</p>
+<p><strong>So what?</strong> Income is a useful signal for credit risk segmentation. High-income customers are generally safer and more creditworthy, making them strong targets for marketing or lending. Because low-income customers show greater variability, we shouldn’t rely on income alone. By focusing on higher-income and creditworthy customers, we can keep the share of low-credit customers (LCR) steady or lower while increasing HSR.</p>
 <details>
   <summary class="toggle">Show R code</summary>
   <pre><code class="language-r">ggplot(customers_data, aes(annual_income_k, credit_score)) +
@@ -249,7 +249,7 @@ This underpins our KPI target of keeping LCR stable or lower.</p>
   <li><strong>Question:</strong> Does category <code>preferred_category</code> differ by <code>gender</code>?</li>
   <li><strong>Null hypothesis H<sub>0</sub>:</strong> Gender and category are independent.</li>
   <li><strong>Alternative hypothesis H<sub>1</sub>:</strong> There is an association between gender and category.</li>
-  <li><strong>Results &amp; Conclusion:</strong> The chi-square test yields p = 0.8993 (> 0.05), so there is no evidence that there is an association between gender and preferred category. Therefore, the result from <a href="#section-5-4">Section&nbsp;5.4</a> likely reflects sample composition rather than a relationship between gender and preferred category. To stay aligned with our objective (raising HSR without increasing LCR), gender-based targeting is deprioritized. We focus instead on variables that directly move HSR/LCR, such as spending behaviour, income, age, and credit.</li>
+  <li><strong>Results &amp; Conclusion:</strong> The chi-square test yields p = 0.8993 (> 0.05), providing no evidence of an association between gender and preferred category. The differences in <a href="#section-5-4">Section&nbsp;5.4</a> likely reflect sample composition rather than a relationship. To stay aligned with our objective (raise HSR without increasing LCR), gender-based targeting can be deprioritized, and we may focus on variables that directly move HSR/LCR (spending behaviour, income, age) with credit safeguards.</li>
 </ul>
 <details>
   <summary class="toggle">Show R code</summary>
@@ -270,7 +270,7 @@ chisq.test(tab_gc)</code></pre>
   <li><strong>Why ANOVA?</strong> We’re comparing the mean of one numeric outcome across more than two independent groups (age bands). A one-way ANOVA tests whether at least one group mean differs.</li>
   <li><strong>Null Hypothesis:</strong> H<sub>0</sub>: All age group means are equal.</li>
   <li><strong>Alternative Hypothesis:</strong> H<sub>1</sub>: At least one age group mean differs.</li>
-  <li><strong>Results &amp; Conclusion:</strong> The ANOVA (F-test) shows a significant effect of age group on spending score. As F(4, 195) = 11.666 and p = 1.63&times;10<sup>&minus;8</sup>, we can conclude there is strong evidence against our null hypothesis that at least one group mean differs. Additionally, a large Adjusted R&sup2; &asymp; 0.193 suggests a meaningful effect, which means the model is fine for inference. Therefore, overall, we conclude that there are significant differences in average spending scores among age groups. To increase spending, age-targeted marketing strategies might be useful. For example, for 18–35 offer limited-time drops, bundle discounts, and social/app promos; for 36–50 emphasize loyalty perks; and for 65+ highlight convenience such as easy returns and assisted in-store service. To summarize, age is a direct lever to raise HSR. Pair execution with simple credit thresholds will be a very effective strategy to maintain LCR or reduce it.</li>
+  <li><strong>Results &amp; Conclusion:</strong> The ANOVA (F-test) shows a significant effect of age group on spending score. As F(4, 195) = 11.666 and p = 1.63&times;10<sup>&minus;8</sup>, we can conclude there is a very strong evidence against our null hypothesis; at least one group mean differs. Additionally, a large Adjusted R&sup2; &asymp; 0.193 suggests a meaningful effect, which means the model is fine for inference. Therefore, overall, we conclude that there are significant differences in average spending scores among age groups. To increase spending, age-targeted marketing strategies may be useful. For example, for 18–35 offer limited-time drops, bundle discounts, and social/app promos; for 36–50 emphasize loyalty perks; and for 65+ highlight convenience such as easy returns and assisted in-store service. To summarize, age is a direct lever to raise HSR. Pair execution with simple credit thresholds will be a very effective strategy to maintain LCR or reduce it.</li>
 </ul>
 <details>
   <summary class="toggle">Show R code</summary>
@@ -289,7 +289,7 @@ summary(fit_anova)</code></pre>
   <li><strong>Question:</strong> Are <code>annual_income_k</code> and <code>credit_score</code> linearly related?</li>
   <li><strong>Null Hypothesis:</strong> H<sub>0</sub>: &rho; = 0.</li>
   <li><strong>Alternative Hypothesis:</strong> H<sub>1</sub>: &rho; ≠ 0.</li>
-  <li><strong>Results &amp; Conclusion:</strong> The Pearson correlation between annual income (k$) and credit score is 0.7492, and a p-value is very close to 0 but less than 0.0001, suggesting a strong positive linear association between annual income and credit score. Practically, higher-income customers tend to have higher credit scores. The scatter plot with the fitted blue line above in <a href="#section-5-5">Section&nbsp;5.5</a> visually supports this, showing an upward trend with tighter clustering at higher incomes and wider dispersion at lower incomes. As concluded earlier, by targeting higher-income and creditworthy customers while applying simple credit thresholds, it will be possible to easily minimize or reduce LCR while growing HSR.</li>
+  <li><strong>Results &amp; Conclusion:</strong> The Pearson correlation between annual income (k$) and credit score is 0.7492, and a p-value is very close to 0 but less than 0.0001, suggesting a strong positive linear association between annual income and credit score. Practically, higher-income customers tend to have higher credit scores. The scatter plot with the fitted blue line above in <a href="#section-5-5">Section&nbsp;5.5</a> visually supports this, showing an upward trend with tighter clustering at higher incomes and wider dispersion at lower incomes. As concluded earlier, by targeting higher-income and creditworthy customers while applying simple credit thresholds, it will be possible to effectively maintain or reduce LCR while growing HSR.</li>
 </ul>
 <details>
   <summary class="toggle">Show R code</summary>
@@ -329,7 +329,9 @@ tibble::tibble(
       {
         heading: "7. Conclusion",
         html: `
-<p class="text-slate-600">The data tells a clear story: younger customers spend more—and with greater variability—while credit quality is concentrated at the high end. Higher income is associated with higher credit scores. Based on these findings, the strategy is to expand high-spending customers (especially ages 18–35) while maintaining or reducing low-credit customers through targeted promotions for 18–35, loyalty reinforcement for ages 36–50, and continuous low-credit monitoring. Finally, given the non-significant chi-square for gender vs. preferred category, gender-based targeting is deprioritized. Focusing on spending and income signals is a more effective path to grow spend.</p>
+<p class="text-slate-600">The data tells a clear story: younger customers spend more with greater variability while credit quality is concentrated at the high end. Higher income is associated with higher credit scores. Based on these findings, the strategy is to expand high-spending customers (especially ages 18–35) 
+while maintaining or reducing low-credit customers through targeted promotions for 18–35, loyalty reinforcement for ages 36–50,
+and continuous low-credit monitoring. Finally, given the non-significant chi-square result for gender vs preferred category, gender-based targeting should be deprioritized. Focusing on spending and income signals is a more effective path to grow spending while maintaining our risk guardrail!</p>
 `,
       },
     ],

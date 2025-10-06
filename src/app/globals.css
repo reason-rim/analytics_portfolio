@@ -118,7 +118,10 @@ a:hover {
 
 /* TOC accordion */
 .project-toc-item .toc-sublist {
-  display: none;
+  display: grid;
+  gap: 0.25rem;
+  list-style: none;
+  padding-left: 0;
 }
 
 .rich-text .toggle {

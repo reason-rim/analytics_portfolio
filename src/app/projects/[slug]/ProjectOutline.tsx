@@ -45,7 +45,7 @@ export default function ProjectOutline({ sections }: ProjectOutlineProps) {
             <li key={section.id} className="project-toc-item">
               {hasSubSections ? (
                 <div>
-                  <button
+                 <button
                     type="button"
                     className="flex w-full items-center gap-3 text-left"
                     onClick={() => toggleSection(key)}
@@ -53,7 +53,9 @@ export default function ProjectOutline({ sections }: ProjectOutlineProps) {
                     <span className="rounded-full bg-primary-soft/60 px-2 py-0.5 text-[0.65rem] font-semibold text-primary">
                       {String(section.displayIndex).padStart(2, "0")}
                     </span>
-                    <span className="flex-1 transition">{section.heading}</span>
+                    <span className="flex-1 transition hover:underline">
+                      {section.heading}
+                    </span>
                     <span
                       className="text-primary transition-transform"
                       style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
@@ -64,9 +66,8 @@ export default function ProjectOutline({ sections }: ProjectOutlineProps) {
                   {isOpen && (
                     <ul className="toc-sublist mt-2 space-y-1 text-xs text-slate-500">
                       {section.subHeadings.map((sub) => (
-                        <li key={sub.id} className="flex items-center gap-2 pl-7">
-                          <span className="mt-[2px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-                          <a href={`#${sub.id}`} className="transition hover:text-primary">
+                        <li key={sub.id} className="pl-7">
+                          <a href={`#${sub.id}`} className="transition hover:text-primary hover:underline">
                             {sub.heading}
                           </a>
                         </li>
@@ -79,7 +80,7 @@ export default function ProjectOutline({ sections }: ProjectOutlineProps) {
                   <span className="rounded-full bg-primary-soft/60 px-2 py-0.5 text-[0.65rem] font-semibold text-primary">
                     {String(section.displayIndex).padStart(2, "0")}
                   </span>
-                  <a href={`#${section.id}`} className="transition hover:text-primary">
+                  <a href={`#${section.id}`} className="transition hover:text-primary hover:underline">
                     {section.heading}
                   </a>
                 </div>
