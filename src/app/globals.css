@@ -10,11 +10,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #08111f;
-    --foreground: #e8f1ff;
-    --accent: #3b82f6;
-    --accent-muted: #1d3c73;
-    --accent-soft: #1e40af4d;
+    --background: #f7fbff;
+    --foreground: #0a1b32;
+    --accent: #1e40af;
+    --accent-muted: #e8f3ff;
+    --accent-soft: #d4e5ff;
   }
 }
 
